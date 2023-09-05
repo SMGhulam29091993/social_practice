@@ -57,3 +57,9 @@ module.exports.create = (req,res)=>{
 module.exports.createSession = (req,res)=>{
     return res.redirect('/');
 }
+
+// setting the sign-out controler
+module.exports.endSession = (req,res)=>{
+    req.logout(err=>console.error(err));
+    return res.redirect('/')
+}

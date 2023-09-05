@@ -9,7 +9,10 @@ const db = require('./config/mongoose');
 // for session cookie
 const session = require('express-session');
 const passport = require('passport');
-const passportLocal = require('./config/passport-local-strategy');
+const passportLocal = new require('./config/passport-local-strategy');
+
+// mongoStore
+const MongoStore = require('connect-mongo');
 
 app.use(express.urlencoded());
 app.use(cookieParser());
@@ -27,6 +30,7 @@ app.set("layout extractScripts", true);
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
+// mongostore is use to store the session cookie in db
 app.use(session({
     name : 'social',
     // Todo change the secret before deployment
@@ -35,7 +39,14 @@ app.use(session({
     resave : false,
     cookie : {
         maxAge : (1000*60*100)
-    }
+    },
+    store: MongoStore.create({
+        mongoUrl : 'mongodb://127.0.0.1:27017/social_development_db',
+        autoRemove: 'disabled'
+      },
+      function(err){
+        console.log(err || "connect-mongo setup is done");
+      })
 }));
 
 app.use(passport.initialize());

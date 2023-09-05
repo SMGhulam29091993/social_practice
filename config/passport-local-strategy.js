@@ -1,5 +1,5 @@
-const passport = require('pasport');
-const LocalStrategy = require('passport.local').Strategy;
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 const User = require('../models/users');
 
@@ -22,3 +22,22 @@ passport.use(new LocalStrategy({
         })
     }
 ))
+
+// serialize the user to decide which key is to be kept as cookies
+passport.serializeUser((user,done)=>{
+    done(null, user.id);
+});
+
+// deserialize the user from the key  in the cookies
+passport.deserializeUser((id,done)=>{
+    User.findById(id)
+    .catch(err=>{
+        console.log("Error in finding the user ==> Passport");
+        return done(err);
+    })
+    .then(user=>{
+        return done(null,user)
+    })
+})
+
+module.exports = passport;

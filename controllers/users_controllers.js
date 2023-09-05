@@ -49,5 +49,5 @@ module.exports.create = (req,res)=>{
 
 // get the sign-in data and creating a session for user
 module.exports.createSession = (req,res)=>{
-    // TODO Later
+    return res.redirect('/');
 }

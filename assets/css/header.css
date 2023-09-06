@@ -1,0 +1,30 @@
+nav header{
+    background-color: royalblue;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    font-size: 1rem;
+    font-family: sans-serif;
+    letter-spacing: 0.5px;
+}
+header h3{
+    margin-left:1rem;
+    color: aliceblue;
+}
+header ul{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding :10px;
+    margin: 0;
+}
+header ul li{
+    margin-right: 1rem;
+    list-style: none;
+    
+}
+header ul li a{
+    text-decoration: none;
+    color: aliceblue;
+}

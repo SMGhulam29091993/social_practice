@@ -1,8 +1,23 @@
 <h1>Social <%= title%></h1>
 <section id="feed-post">
     <h4>Post</h4>
-    <form action="" medtho="POST" id="new-post-form">
-        <textarea name="content" cols="30" rows="3"></textarea>
+    <% if(locals.user){ %>
+    <form action="/post/postCreate" method="POST" id="new-post-form">
+        <textarea name="content" cols="30" rows="3" placeholder="Type here"></textarea>
         <button type="submit">Post</button>
     </form>
+    <%}%>
+    <div id="post-list-container">
+        <ul>
+            <% for(post of posts){ %>
+                <li>
+                    <%= post.content %>
+                    <small>
+                        <%= post.user.name %>
+                    </small>
+                </li>
+            <%}%>
+        </ul>
+    </div>
 </section>
+

@@ -11,6 +11,19 @@
     <h1>Social/Users/Profile</h1>
     <p><%= user.name %></p>
     <p><%= user.email %></p>
+    <div id="post-list-container-profile">
+        <ul>
+            <% for(post of posts){%>
+                <li>
+                    <p>
+                        <%= post.content %>
+                        <br>
+                        <%= post.user.name %>
+                    </p>
+                </li>
+            <%}%>
+        </ul>
+    </div>
     <!-- <%- include("_footer") %> -->
     <script src="/user_script.js"></script>
 <!-- </body>

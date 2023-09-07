@@ -1,9 +1,15 @@
 const User = require('../models/users');
+const Post = require('../models/post');
 
 module.exports.profile = function(req,res){
-    return res.render('users_profile',{
-        title : "User's Profile"
-    });
+    Post.find({}).populate('user').exec()
+    .then(post=>{
+        return res.render('users_profile',{
+            title : "User's Profile",
+            posts : post
+        });
+    })
+
 }
 
 // render the singn up page
@@ -35,7 +41,7 @@ module.exports.create = (req,res)=>{
         .catch(err=>{
                 console.log(`Error in finding user in signing up ${err}`);
                 return;
-        })
+        })  
         .then(user=>{
             if(!user){
                 User.create(req.body)
@@ -63,3 +69,4 @@ module.exports.endSession = (req,res)=>{
     req.logout(err=>console.error(err));
     return res.redirect('/')
 }
+

@@ -11,7 +11,7 @@
     <h1>Social/Users/Profile</h1>
     <p><%= user.name %></p>
     <p><%= user.email %></p>
-    <div id="post-list-container-profile">
+    <div id="post-list-container">
         <ul>
             <% for(post of posts){%>
                 <li>
@@ -20,6 +20,32 @@
                         <br>
                         <%= post.user.name %>
                     </p>
+                    <div id="post-comments">
+                        <% if (locals.user){ %>
+                            <form action="comment/commentCreate" method="POST">
+                                <input type="text" name="content" placeholder="Add Your Comment" required>
+                                <input type="hidden" name="post" value="<%= post._id %>">
+                                <button type="submit">Add Comment</button>
+                            </form>
+                        <% } %>
+                        <div class="post-comment-list">
+                            <ul id="pot-comment-<%= post._id %>">
+                                <% for (comment of post.comment){%>
+                                    <li>
+                                        <p>
+                                            <%= comment.content %>
+                                            <br>
+                                            <small>
+                                                <%= comment.user.name %>
+                                            </small>
+                                        </p>
+                                    </li>
+                                <% } %>
+
+                            </ul>
+
+                        </div>
+                    </div>
                 </li>
             <%}%>
         </ul>

@@ -2,7 +2,15 @@ const User = require('../models/users');
 const Post = require('../models/post');
 
 module.exports.profile = function(req,res){
-    Post.find({}).populate('user').exec()
+    Post.find({})
+    .populate('user')
+    .populate({
+        path:'comment',
+        populate : {
+            path : 'user'
+        }
+    })
+    .exec()
     .then(post=>{
         return res.render('users_profile',{
             title : "User's Profile",

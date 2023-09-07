@@ -1,3 +1,24 @@
 body{
     background-color: rgb(185, 218, 240);
 }
+#post-list-container{
+    height: 10rem;
+    width : 20rem;
+}
+#post-list-container ul {
+    overflow: auto;
+    height: 100%;
+}
+#post-list-container ul::-webkit-scrollbar{
+    width : 10px;
+}
+#post-list-container ul::-webkit-scrollbar-thumb{
+    width : 5px;
+    background-color: blueviolet;
+    border-radius: 3px;
+}
+#post-list-container ul::-webkit-scrollbar-track{
+    width : 5px;
+    background-color: lightblue;
+    border-radius: 3px;
+}

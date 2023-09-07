@@ -5,3 +5,24 @@ body{
 #layout-main{
     height: 100vh;
 }
+#post-list-container{
+    height: 10rem;
+    width : 20rem;
+}
+#post-list-container ul {
+    overflow: auto;
+    height: 100%;
+}
+#post-list-container ul::-webkit-scrollbar{
+    width : 10px;
+}
+#post-list-container ul::-webkit-scrollbar-thumb{
+    width : 5px;
+    background-image: linear-gradient(120deg, blue,black);
+    border-radius: 3px;
+}
+#post-list-container ul::-webkit-scrollbar-track{
+    width : 5px;
+    background-color: #fff;
+    border-radius: 3px;
+}

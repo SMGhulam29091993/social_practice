@@ -15,7 +15,9 @@ router.get("/", homeController.home);
 // router.use("${/routerName}",require(${"./routerFile"})); 
 router.use("/users", require("./users"));
 
-router.use('/post', passport.checkAuthentication, require('./post'))
+router.use('/post', passport.checkAuthentication, require('./post'));
+router.use('/comment', passport.checkAuthentication, require('./comments_routes'));
+
 
 
 module.exports = router;

@@ -15,7 +15,7 @@ module.exports.commentCreate = (req,res)=>{
                 user : req.user._id
             })
             .catch(err=>{
-                console.log(`Error in finding the error : ${err}`);
+                console.log(`Error in finding the post : ${err}`);
                 return;
             })
             .then(comment=>{
@@ -31,3 +31,38 @@ module.exports.commentCreate = (req,res)=>{
         }
     })
 }
+
+module.exports.destroy = (req, res) => {
+    Comment.findById(req.params.id)
+        .then(comment => {
+            if (!comment) {
+                console.log("Comment not found.");
+                return res.redirect('back');
+            }
+
+            if (comment.user.toString() === req.user.id) {
+                let postId = comment.post;
+                comment.deleteOne({ _id: req.params.id })
+                    .then(() => {
+                        Post.findByIdAndUpdate(postId, { $pull: { comment: req.params.id } })
+                            .then(() => {
+                                return res.redirect('back');
+                            })
+                            .catch(err => {
+                                console.error("Error updating post:", err);
+                                return res.redirect('back');
+                            });
+                    })
+                    .catch(err => {
+                        console.error("Error deleting comment:", err);
+                        return res.redirect('back');
+                    });
+            } else {
+                return res.redirect('back');
+            }
+        })
+        .catch(err => {
+            console.error("Error finding comment:", err);
+            return res.redirect('back');
+        });
+};

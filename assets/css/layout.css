@@ -1,12 +1,13 @@
 body{
     margin:0;
     font-size: 1rem;
-}
-#layout-main{
     height: 100vh;
 }
+#layout-main{
+    height: 100%;
+}
 #post-list-container{
-    height: 10rem;
+    height: 50%;
     width : 20rem;
 }
 #post-list-container ul {

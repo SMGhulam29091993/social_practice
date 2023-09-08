@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 const Comment = require('../models/comments');
+const User = require('../models/users');
 
 module.exports.home = function(req,res){
     console.log(req.cookies);
@@ -11,12 +12,16 @@ module.exports.home = function(req,res){
     })
     .exec()
     .then((post)=>{
-        return res.render("home",{
-            title : "Social | Home",
-            posts : post
+        User.find({})
+        .then((user)=>{
+            return res.render("home",{
+                title : "Social | Home",
+                posts : post,
+                all_users : user
+        })
+        
         });
     })
-    
 }
 
 

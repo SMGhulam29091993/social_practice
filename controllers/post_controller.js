@@ -16,6 +16,18 @@ module.exports.postCreate = (req,res)=>{
         return res.redirect('back')
     })
 };
+// try{
+//     let post_create = await Post.create({
+//         content : req.body.content,
+//         user : req.user._id
+//     });
+//     console.log(post);
+//     return res.redirect('back')
+// }catch(err){
+//     console.log(`Error in creating the post : ${err}`);
+//     return;
+// }
+// }
 
 module.exports.destroy = (req, res) => {
     console.log("Destroying post:", req.params.id); // Debugging

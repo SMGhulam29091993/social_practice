@@ -1,40 +1,25 @@
 const User = require('../models/users');
 const Post = require('../models/post');
 
-module.exports.profile = function (req, res) {
-    // Find user posts and populate related data
-    Post.find({})
-        .populate('user')
-        .populate({
-            path: 'comment',
-            populate: {
-                path: 'user'
-            }
-        })
-        .exec()
-        .then((post) => {
-            // Find the user by ID and render the profile page
-            User.findById(req.params.id)
-                .then((user) => {
-                    if (!user) {
-                        console.log("User not found.");
-                        return res.redirect('back');
-                    }
-                    return res.render('users_profile', {
-                        title: `${user.name} Profile`,
-                        posts: post,
-                        profile_user: user
-                    });
-                })
-                .catch((err) => {
-                    console.error('Error finding user:', err);
-                    return res.redirect('back');
-                });
-        })
-        .catch((err) => {
-            console.error('Error finding posts:', err);
+module.exports.profile = async function (req, res) {
+
+    // Find the user by ID and render the profile page
+    try{
+        let user = await User.findById(req.params.id)
+    
+        if (!user) {
+            console.log("User not found.");
             return res.redirect('back');
+        }
+        return res.render('users_profile', {
+            title: `${user.name} Profile`,
+            profile_user: user
         });
+
+    }catch(err){
+        console.error('Error finding user:', err);
+        return res.redirect('back');
+    }
 };
 
 module.exports.update = (req,res)=>{

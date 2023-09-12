@@ -1,5 +1,6 @@
 const User = require('../models/users');
-const Post = require('../models/post');
+
+
 
 module.exports.profile = async function (req, res) {
 
@@ -26,13 +27,16 @@ module.exports.update = (req,res)=>{
     if(req.user.id == req.params.id){
         User.findByIdAndUpdate(req.user.id, req.body)
         .then(user=>{
+            req.flash('success','User updated!');
             return res.redirect('back');
         })
         .catch(err=>{
             console.log("Error in updating the user : ",err);
+            req.flash('error',err)
             return;
         })
     }else{
+        req.flash('error','You are unauthorise to make the update!')
         return res.status(401).send('Unauthorised');
     }
 }
@@ -65,6 +69,7 @@ module.exports.create = (req,res)=>{
         User.findOne({email : req.body.email})
         .catch(err=>{
                 console.log(`Error in finding user in signing up ${err}`);
+                req.flash('error',err);
                 return;
         })  
         .then(user=>{
@@ -72,13 +77,16 @@ module.exports.create = (req,res)=>{
                 User.create(req.body)
                 .then(user=>{
                     console.log(user);
+                    req.flash('success', 'Congratulations! You have signd up to Social');
                     return res.redirect('/users/sign-in');
                 })
                 .catch(err=>{
                     console.log(`Error in finding user in signing up ${err}`);
+                    req.flash('error',err);
                     return;
                 })
             }else{
+                req.flash('error','User already present!');
                 return res.redirect('back');
             }
         })
@@ -86,12 +94,14 @@ module.exports.create = (req,res)=>{
 
 // get the sign-in data and creating a session for user
 module.exports.createSession = (req,res)=>{
+    req.flash('success', 'Logged in successfully');
     return res.redirect('/');
 }
 
 // setting the sign-out controler
 module.exports.endSession = (req,res)=>{
     req.logout(err=>console.error(err));
+    req.flash('success', 'You have Logged Out successfully');
     return res.redirect('/')
 }
 

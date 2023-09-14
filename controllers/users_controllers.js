@@ -1,6 +1,6 @@
 const User = require('../models/users');
-
-
+const fs = require('fs');
+const path = require('path');
 
 module.exports.profile = async function (req, res) {
 
@@ -23,22 +23,60 @@ module.exports.profile = async function (req, res) {
     }
 };
 
-module.exports.update = (req,res)=>{
+module.exports.update = async (req,res)=>{
     if(req.user.id == req.params.id){
-        User.findByIdAndUpdate(req.user.id, req.body)
-        .then(user=>{
-            req.flash('success','User updated!');
-            return res.redirect('back');
-        })
-        .catch(err=>{
-            console.log("Error in updating the user : ",err);
-            req.flash('error',err)
-            return;
-        })
+        try{
+            let user = await User.findById(req.params.id);
+            User.uploadedAvatar(req,res,(err)=>{
+                if(err){
+                    console.log('****Multer Error : ',err);
+                }
+                console.log(req.file);
+                user.name = req.body.name;
+                user.email = req.body.email;
+
+                if(req.file){
+                    // this will delete previous img when new image is uploaded
+                    if (user.avatar){
+                        try{
+                            fs.unlinkSync(path.join(__dirname,'..', user.avatar));
+                            console.log('Previous avatar deleted successfully.');
+                        }catch(unlinkError){
+                            console.error('Error in deleting the previous avatar : ',unlinkError)
+                        }
+                    }
+                    // this is saving the path of the uploaded file into the avatar field in the user
+                    user.avatar = User.avatarPath + '/' + req.file.filename;
+                }
+                user.save();
+                return res.redirect('back');
+            })
+
+        }catch(err){
+            req.flash("error", err);
+            console.error(err);
+            res.redirect('back');
+        }
+
     }else{
         req.flash('error','You are unauthorise to make the update!')
         return res.status(401).send('Unauthorised');
     }
+    // if(req.user.id == req.params.id){
+    //     User.findByIdAndUpdate(req.user.id, req.body)
+    //     .then(user=>{
+    //         req.flash('success','User updated!');
+    //         return res.redirect('back');
+    //     })
+    //     .catch(err=>{
+    //         console.log("Error in updating the user : ",err);
+    //         req.flash('error',err)
+    //         return;
+    //     })
+    // }else{
+    //     req.flash('error','You are unauthorise to make the update!')
+    //     return res.status(401).send('Unauthorised');
+    // }
 }
 
 // render the singn up page

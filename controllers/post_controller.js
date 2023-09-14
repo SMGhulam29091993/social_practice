@@ -2,18 +2,84 @@ const Post = require('../models/post');
 const Comment = require('../models/comments');
 
 
-module.exports.postCreate = async (req,res)=>{
-    try{
+// Create a new post
+module.exports.postCreate = async function(req, res) {
+    try {
         let post = await Post.create({
-            content : req.body.content,
-            user : req.user._id
-        })
-        req.flash('success','Post Created!');
-        return res.redirect('back')
-    }catch(err){
-        req.flash('error',err);
-        return;
+            content: req.body.content,
+            user: req.user._id
+        });
+       
+
+        if (req.xhr) {
+            // Populate the user's name (exclude password) if the request is AJAX
+            // post = await post.populate('user','name').execPopulate();
+      
+            return res.status(200).json({
+                data: {
+                    post: post,
+                },
+                message: "Post created!"
+            });
+        }
+
+        req.flash('success', 'Post published!');
+        return res.redirect('back');
+    } catch (err) {
+        req.flash('error', err);
+        console.error(err);
+        return res.redirect('back');
     }
+};
+
+// Delete a post
+module.exports.destroy = async (req, res) => {
+    try {
+        console.log("Destroying post:", req.params.id);
+
+        const post = await Post.findById(req.params.id);
+
+        if (!post) {
+            req.flash('error', 'Post not found.');
+            return res.redirect('back');
+        }
+
+        if (post.user.toString() !== req.user.id) {
+            req.flash('error', 'User is not authorized to delete this post.');
+            return res.redirect('back');
+        }
+
+        console.log("Removing post:", post._id);
+
+        await post.deleteOne({ _id: req.params.id });
+
+        req.flash('success', 'Post removed successfully.');
+
+        await Comment.deleteMany({ post: req.params.id });
+        console.log("Comments associated with the post were deleted.");
+
+        if (req.xhr) {
+            return res.status(200).json({
+                data: {
+                    post_id: req.params.id
+                },
+                message: 'Post deleted successfully'
+            });
+        }
+
+        res.redirect('back');
+    } catch (err) {
+        req.flash("error", err);
+        console.error(err);
+        res.redirect('back');
+    }
+};
+
+
+
+
+
+
     // Post.create({
     //     content : req.body.content,
     //     user : req.user._id
@@ -26,42 +92,6 @@ module.exports.postCreate = async (req,res)=>{
     //     console.log(post);
     //     return res.redirect('back')
     // })
-};
-
-
-module.exports.destroy = async (req, res) => {
-    try {
-        console.log("Destroying post:", req.params.id); // Debugging
-
-        const post = await Post.findById(req.params.id);
-
-        if (!post) {
-            console.error("");
-            req.flash('error','Post not found.');
-            return res.redirect('back');
-        }
-
-        if (post.user.toString() !== req.user.id) {
-            req.flash('error','User is not authorized to delete this post.');
-            return res.redirect('back');
-        }
-
-        console.log("Removing post:", post._id); // Debugging
-
-        await post.deleteOne({_id: req.params.id});
-        
-        req.flash('success','Post removed successfully.');
-
-        await Comment.deleteMany({ post: req.params.id });
-        console.log("Comments associated with the post were deleted."); // Debugging
-
-        res.redirect('back');
-    } catch (err) {
-        req.flash("error:", err);
-        res.redirect('back');
-    }
-};
-
 
 // module.exports.destroy = (req, res) => {
 //     console.log("Destroying post:", req.params.id); // Debugging

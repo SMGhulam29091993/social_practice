@@ -26,6 +26,7 @@
     "node": "^20.5.1",
     "node.js": "^0.0.1-security",
     "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "sass": "^1.66.1",
     "sass-middleware": "^0.0.3"

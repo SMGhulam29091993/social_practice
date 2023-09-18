@@ -1,5 +1,6 @@
 const Post = require("../../../models/post")
 const Comment = require('../../../models/comments');
+const mongoose = require('mongoose');
 
 module.exports.Index = async (req,res)=>{
     let post = await Post.find({})
@@ -17,11 +18,21 @@ module.exports.Index = async (req,res)=>{
 
 module.exports.destroy = async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                message: 'Invalid post ID.'
+            });
+        }
         let post = await Post.findById(req.params.id);
 
         if (!post) {
             return res.status(404).json({
                 message: 'Post not found.'
+            });
+        }
+        if (post.user != req.user.id){
+            return res.status(401).json({
+                message : 'You cannot delete this post!'
             });
         }
 

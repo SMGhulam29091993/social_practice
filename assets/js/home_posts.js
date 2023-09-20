@@ -1,3 +1,6 @@
+
+const PostComments = require('./home_post_comment');
+
 {   
     // method to submit the form data for new post using AJAX
     let createPost = function(){
@@ -11,6 +14,7 @@
                 url: '/post/postCreate',
                 data: newPostForm.serialize(),
                 success: function(data){
+                    console.log(data);
                     let newPost = newPostDom(data.data.post);
                     $('#post-list-container>ul').prepend(newPost);
                     deletePost($(' .delete-post-button', newPost));

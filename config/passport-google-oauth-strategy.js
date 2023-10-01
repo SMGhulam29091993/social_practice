@@ -15,8 +15,11 @@ passport.use(new googleStrategy({
         .catch(err=>{
             console.log(`Error in passport-google-oauth ${err}`);
             return;
+           
         })
+      
         .then(user=>{
+            console.log(profile);
             // if user not found then create the user and set it as req.user
             if(!user){
                 User.create({

@@ -17,8 +17,9 @@ router.use("/users", require("./users"));
 
 router.use('/post', passport.checkAuthentication, require('./post'));
 router.use('/comment', passport.checkAuthentication, require('./comments_routes'));
-
+router.use('/likes', require('./likes'));
 router.use('/api',require('./api'));
+
 
 
 

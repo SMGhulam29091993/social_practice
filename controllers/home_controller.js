@@ -24,26 +24,38 @@ const User = require('../models/users');
 //     })
 // }
 
-module.exports.home = async function(req,res){
+module.exports.home = async function(req, res){
+
     try{
+        // CHANGE :: populate the likes of each post and comment
         let post = await Post.find({})
         .sort('-createdAt')
         .populate('user')
         .populate({
-            path : 'comment', populate : {path : 'user'}
-        })
-        .exec()
-       
-        let user = await User.find({})
-        return res.render("home",{
-            title : "Social | Home",
-            posts : post,
-            all_users : user
-        })
+            path: 'comment',
+            populate: {
+                path: 'user'
+            },
+            // populate : {
+            //     path : 'likes'
+            // },
+        }).populate('likes')
+        
+
+    
+        let user = await User.find({});
+
+        return res.render('home', {
+            title: "Social | Home",
+            posts:  post,
+            all_users: user
+        });
+
     }catch(err){
-        console.log(`Error ${err}`);
+        console.log('Error', err);
         return;
     }
+   
 }
 
 

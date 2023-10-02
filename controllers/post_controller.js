@@ -1,6 +1,6 @@
 const Post = require('../models/post');
 const Comment = require('../models/comments');
-
+const Like = require('../models/likes');
 
 // Create a new post
 module.exports.postCreate = async function(req, res) {
@@ -50,6 +50,10 @@ module.exports.destroy = async (req, res) => {
         }
 
         console.log("Removing post:", post._id);
+        
+        // CHANGE :: delete the associated likes for the post and all its comments' likes too
+        await Like.deleteMany({likeable: post, onModel: 'Post'});
+        await Like.deleteMany({_id: {$in: post.comment}});
 
         await post.deleteOne({ _id: req.params.id });
 

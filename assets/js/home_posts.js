@@ -115,7 +115,9 @@ const PostComments = require('./home_post_comment');
 
 
 
-    // loop over all the existing posts on the page (when the window loads for the first time) and call the delete post method on delete link of each, also add AJAX (using the class we've created) to the delete button of each
+    // loop over all the existing posts on the page (when the window loads for the first time) 
+    // and call the delete post method on delete link of each, also add AJAX (using the class we've created)
+    //  to the delete button of each
     let convertPostsToAjax = function(){
         $('#post-list-container>ul>li').each(function(){
             let self = $(this);
